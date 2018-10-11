@@ -1,7 +1,4 @@
 #!/bin/bash
 
-for i in *.java; do
-    javac $i
-done
-
+javac *.java
 java -cp . Main
