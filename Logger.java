@@ -1,12 +1,15 @@
 public class Logger {
-    static public void logDebug(String str) {
+    Logger() {
+        int myid = peerProcess.config.getID();
+        // open log file
+    }
+    public void logDebug(String str) {
         System.out.println(str);
     }
-    static public void logConnectTo(int peer) {
-        int this_id = peerProcess.config.getID();
+    public void logConnectTo(int peer) {
         return;
     }
-    static public void logConnectedFrom(int peer) {
+    public void logConnectedFrom(int peer) {
         return;
     }
 }
