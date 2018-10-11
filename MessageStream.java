@@ -5,4 +5,10 @@ public class MessageStream {
     MessageStream(Socket socket) {
         this.socket = socket;
     }
+    Message next() {
+        return new Message("TODO", new byte[]{});
+    }
+    void send(Message msg) {
+        return;
+    }
 }
