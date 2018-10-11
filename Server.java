@@ -13,7 +13,10 @@ class HandshakeThread extends Thread {
     public void run() {
         // TODO: implement handshake
         int peerid = 0;
-        peerProcess.peers.get(peerid).msgstream = new MessageStream(connection);
+        Peer peer = peerProcess.peers.get(peerid);
+        peer.msgstream = new MessageStream(connection);
+        peer.thread = new PeerThread(peer);
+        peer.thread.start();
     }
 }
 

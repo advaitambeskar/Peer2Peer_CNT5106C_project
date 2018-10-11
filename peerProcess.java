@@ -9,6 +9,10 @@ public class peerProcess {
     static Server server = null;
     static AtomicBoolean done = new AtomicBoolean(false);
 
+    public static void checkIfDone() {
+        return;
+    }
+
     public static void main(String[] args) throws Exception {
         id = Integer.parseInt(args[0]);
         logger.logDebug("this is for debugging only");
@@ -26,5 +30,10 @@ public class peerProcess {
         for (Peer peer : peers.values())
             if (peer.id < id)
                 Client.connectTo(peer.id);
+
+        // main loop
+        while (!done.get()) {
+            checkIfDone();
+        }
     }
 }
