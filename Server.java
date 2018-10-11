@@ -22,10 +22,11 @@ class HandshakeThread extends Thread {
 
 class Server extends Thread {
     public void run() {
+        ServerSocket listener = new ServerSocket(peerProcess.config.getPort());
         try {
-            ServerSocket listener = new ServerSocket(peerProcess.config.getPort());
             while (!peerProcess.done.get())
                 new HandshakeThread(listener.accept()).start();
         } catch (Exception e) {}
+        listener.close();
     }
 }
