@@ -1,6 +1,6 @@
 public class Logger {
     Logger() {
-        int myid = peerProcess.config.getID();
+        int myid = peerProcess.id;
         // open log file
     }
     public void logDebug(String str) {

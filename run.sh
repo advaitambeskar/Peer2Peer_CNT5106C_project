@@ -1,4 +1,4 @@
 #!/bin/bash
 
 javac *.java
-java -cp . peerProcess
+java -cp . peerProcess 1001

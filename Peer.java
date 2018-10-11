@@ -1,4 +1,5 @@
 import java.net.*;
+import java.util.concurrent.atomic.*;
 
 public class Peer {
     public int id;
@@ -11,5 +12,6 @@ public class Peer {
         this.port = port;
     }
 
-    public Socket socket = null;
+    MessageStream msgstream = null;
+    AtomicBoolean selected = new AtomicBoolean(false);
 }
