@@ -18,6 +18,13 @@ public class peerProcess {
             peers.put(peer.id, peer);
         }
 
+        // start server
         server = new Server();
+        server.start();
+
+        // connect to peers
+        for (Peer peer : peers.values())
+            if (peer.id < id)
+                Client.connectTo(peer.id);
     }
 }
