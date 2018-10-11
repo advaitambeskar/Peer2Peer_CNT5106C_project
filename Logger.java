@@ -1,12 +1,12 @@
 public class Logger {
-    final Config config;
-    Logger(Config config) {
-        this.config = config;
+    static public void logDebug(String str) {
+        System.out.println(str);
     }
-    public void logConnectTo(int peer) {
+    static public void logConnectTo(int peer) {
+        int this_id = peerProcess.config.getID();
         return;
     }
-    public void logConnectedFrom(int peer) {
+    static public void logConnectedFrom(int peer) {
         return;
     }
 }

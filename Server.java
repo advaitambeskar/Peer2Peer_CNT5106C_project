@@ -1,9 +1,8 @@
-public class Server {
-    public final Config config;
-    public final Logger logger;
+import java.net.*;
 
-    Server(Config config, Logger logger) {
-        this.config = config;
-        this.logger = logger;
+public class Server {
+
+    Server() throws Exception {
+        ServerSocket listener = new ServerSocket(peerProcess.config.getPort());
     }
 }
