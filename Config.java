@@ -1,11 +1,12 @@
 public class Config {
     public int getPort() {
-        return 0;
+        return peerProcess.id;
     }
     public Peer[] getPeers() {
         return new Peer[] {
-            new Peer(1001,"localhost", 1001),
-            new Peer(1002,"localhost", 1002),
+            new Peer(11001, "localhost", 11001),
+            new Peer(11002, "localhost", 11002),
+            new Peer(11003, "localhost", 11003),
         };
     }
 }

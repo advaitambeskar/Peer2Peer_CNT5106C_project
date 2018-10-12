@@ -9,13 +9,14 @@ public class Client {
             Socket socket = new Socket(peer.host, peer.port);
             DataInputStream input = new DataInputStream(socket.getInputStream());
             DataOutputStream output =  new DataOutputStream(socket.getOutputStream());
-            HandshakeThread.sendHandshake(output, peerid);
+            HandshakeThread.sendHandshake(output);
+            HandshakeThread.consumeHandshake(input);
             peer.msgstream = new MessageStream(input, output);
             peer.thread = new PeerThread(peer);
             peer.thread.start();
             peerProcess.logger.logConnectTo(peerid);
         } catch (Exception e) {
-            peerProcess.logger.logDebug("Exception raised at client when trying to establish connection to servers");
+            peerProcess.logger.logDebug("Exception raised at client when trying to establish connection to servers: " + e);
         }
     }
 }

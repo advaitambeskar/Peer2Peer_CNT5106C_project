@@ -5,12 +5,13 @@ import java.util.*;
 
 class HandshakeThread extends Thread {
     public Socket connection;
+    int peerid;
     HandshakeThread(Socket connection) {
         this.connection = connection;
     }
 
-    public static void sendHandshake(DataOutputStream output, int peerid) throws Exception {
-        byte [] buf = {0};
+    public static void sendHandshake(DataOutputStream output) throws Exception {
+        byte [] buf = new byte[32];
         String header = "P2PFILESHARINGPROJ";
         for(int i = 0; i < header.length(); i++) {
             buf[i] = header.getBytes()[i];
@@ -19,7 +20,7 @@ class HandshakeThread extends Thread {
             buf[i] = 0;
         }
         ByteBuffer int2bytes = ByteBuffer.allocate(4);
-        int2bytes.putInt(peerid);
+        int2bytes.putInt(peerProcess.id);
         buf[28] = int2bytes.get(0);
         buf[29] = int2bytes.get(1);
         buf[30] = int2bytes.get(2);
@@ -31,12 +32,10 @@ class HandshakeThread extends Thread {
         byte [] buf = new byte[32];
         input.read(buf);
         String header = new String(Arrays.copyOfRange(buf, 0, 19));
-        if (header != "P2PFILESHARINGPROJ") {
-            peerProcess.logger.logDebug("Bad handshake header!");
-            throw new Exception();
+        if (header.equals("P2PFILESHARINGPROJ")) {
+            throw new Exception("Bad handshake header: " + header);
         }
         int peerid = ByteBuffer.wrap(Arrays.copyOfRange(buf, 28, 32)).getInt();
-        peerProcess.logger.logConnectedFrom(peerid);
         return peerid;
     }
 
@@ -45,13 +44,16 @@ class HandshakeThread extends Thread {
             DataInputStream input = new DataInputStream(connection.getInputStream());
             DataOutputStream output =  new DataOutputStream(connection.getOutputStream());
 
-            int peerid = consumeHandshake(input);
+            sendHandshake(output);
+            peerid = consumeHandshake(input);
+            peerProcess.logger.logConnectedFrom(peerid);
             Peer peer = peerProcess.peers.get(peerid);
             peer.msgstream = new MessageStream(input, output);
             peer.thread = new PeerThread(peer);
             peer.thread.start();
+            peerProcess.logger.logDebug("HandshakeThread: exit normally");
         } catch (Exception e) {
-            peerProcess.logger.logDebug("Exception raised during handshake!");
+            peerProcess.logger.logDebug("Exception raised during handshake: " + e);
         }
     }
 }

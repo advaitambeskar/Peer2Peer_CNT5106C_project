@@ -10,7 +10,16 @@ public class peerProcess {
     static AtomicBoolean done = new AtomicBoolean(false);
 
     public static void checkIfDone() {
-        return;
+        peerProcess.logger.logDebug("peerProcess: checkIfDone");
+        for (Peer peer : peers.values()) {
+            if (!peer.done.get()) {
+                peerProcess.logger.logDebug("peerProcess: Peer " + peer.id + " not done");
+                done.set(false);
+                return;
+            }
+        }
+        peerProcess.logger.logDebug("peerProcess: done");
+        done.set(true);
     }
 
     public static void main(String[] args) throws Exception {
@@ -19,7 +28,8 @@ public class peerProcess {
 
         // initialize peers
         for (Peer peer : config.getPeers()) {
-            peers.put(peer.id, peer);
+            if (peer.id != id)
+                peers.put(peer.id, peer);
         }
 
         // start server
@@ -34,6 +44,7 @@ public class peerProcess {
         // main loop
         while (!done.get()) {
             checkIfDone();
+            Thread.sleep(1000);
         }
     }
 }

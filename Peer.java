@@ -14,5 +14,6 @@ public class Peer {
 
     MessageStream msgstream = null;
     AtomicBoolean selected = new AtomicBoolean(false);
+    AtomicBoolean done = new AtomicBoolean(false);
     PeerThread thread = null;
 }

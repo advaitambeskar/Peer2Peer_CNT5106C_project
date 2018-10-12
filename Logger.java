@@ -4,7 +4,7 @@ public class Logger {
         // open log file
     }
     public void logDebug(String str) {
-        System.out.println(str);
+        System.out.println("[Peer " + peerProcess.id + "] " + str);
     }
     public void logConnectTo(int peer) {
         return;

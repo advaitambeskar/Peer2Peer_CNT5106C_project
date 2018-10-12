@@ -9,11 +9,19 @@ class Server extends Thread {
     public void run() {
         try {
             ServerSocket listener = new ServerSocket(peerProcess.config.getPort());
-            while (!peerProcess.done.get())
-                new HandshakeThread(listener.accept()).start();
+            listener.setSoTimeout(1000);
+            while (!peerProcess.done.get()) {
+                try {
+                    new HandshakeThread(listener.accept()).start();
+                    peerProcess.logger.logDebug("Server: new connection accepted");
+                } catch (SocketTimeoutException e) {
+                    peerProcess.logger.logDebug("Server: timeout");
+                }
+            }
             listener.close();
+            peerProcess.logger.logDebug("Server: exit");
         } catch (Exception e) {
-            peerProcess.logger.logDebug("Exception raised in server thread!");
+            peerProcess.logger.logDebug("Exception raised in server thread: " + e);
         }
     }
 }
