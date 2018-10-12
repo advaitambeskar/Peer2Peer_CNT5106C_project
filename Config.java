@@ -49,7 +49,6 @@ public class cfg_reader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();	
 		} 
-
 		return all_data;
 
 	}
@@ -86,15 +85,28 @@ public class cfg_reader {
 	}
 	
 	public int getPort(){
-		String[][] it_here=start_read("PeerInfo.cfg");
-        for(int k=0;k<)
-        
-		
-		return 0;
+		String[][] it_here=start_read("/Users/qibing/Desktop/PeerInfo.cfg");
+		int k=0;
+		int final_result=0;
+		for (k=0;k<=5;k++){
+			if (peerProcess.id==Integer.parseInt(it_here[k][2])){
+				final_result=Integer.parseInt(it_here[k][2]);
+			} 
+			
+		}
+		return final_result;		
 	}
 	
 	public String getHostName(){
-		return "";
+		String[][] it_here=start_read("/Users/qibing/Desktop/PeerInfo.cfg");
+		int k=0;
+		String final_result="";
+		for (k=0;k<=5;k++){
+			if (peerProcess.id==Integer.parseInt(it_here[k][2])){
+				final_result=it_here[k][1];
+			} 		
+		}
+		return final_result;
 	}
 	
     
