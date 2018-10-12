@@ -8,6 +8,7 @@ public class peerProcess {
     static HashMap<Integer, Peer> peers = new HashMap<Integer, Peer>();
     static Server server = null;
     static AtomicBoolean done = new AtomicBoolean(false);
+    static FileManager filemanager = new FileManager();
 
     public static void checkIfDone() {
         peerProcess.logger.logDebug("peerProcess: checkIfDone");
