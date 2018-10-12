@@ -1,9 +1,12 @@
 import java.net.*;
+import java.io.*;
 
 public class MessageStream {
-    Socket socket;
-    MessageStream(Socket socket) {
-        this.socket = socket;
+    DataInputStream input;
+    DataOutputStream output;
+    MessageStream(DataInputStream input, DataOutputStream output) {
+        this.input = input;
+        this.output = output;
     }
     Message next() {
         return new Message("TODO", new byte[]{});
