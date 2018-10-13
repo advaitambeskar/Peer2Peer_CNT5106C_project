@@ -20,7 +20,7 @@ import java.util.Properties;
 		} else if(filepath=="PeerInfo.cfg"){
 			m=3;
 		}
-		String[][] all_data=new String[6][m];
+		String[][] all_data=new String[100][m];
  		try {
 			BufferedReader file_here = new BufferedReader (new FileReader(filepath));
 			while ((textLine=file_here.readLine())!=null){
@@ -41,6 +41,9 @@ import java.util.Properties;
 		}
 		return all_data;
  	}
+	 
+	 //The following part are about how to read the basic system parameters
+	 
  	public int getNumberOfPreferredNeighbors(){
 		String[][] it_here=start_read("Common.cfg");
 		return Integer.parseInt(it_here[0][1]);
@@ -65,8 +68,11 @@ import java.util.Properties;
 		String[][] it_here=start_read("Common.cfg");
 		return Integer.parseInt(it_here[5][1]);
 	}
+	 
+	//The following part are about how to read the user profile
+	 
  	public int getPort(){
-		String[][] it_here=start_read("/Users/qibing/Desktop/PeerInfo.cfg");
+		String[][] it_here=start_read("PeerInfo.cfg");
 		int k=0;
 		int final_result=0;
 		for (k=0;k<=5;k++){
@@ -77,7 +83,7 @@ import java.util.Properties;
 		return final_result;
 	}
  	public String getHostName(){
-		String[][] it_here=start_read("/Users/qibing/Desktop/PeerInfo.cfg");
+		String[][] it_here=start_read("PeerInfo.cfg");
 		int k=0;
 		String final_result="";
 		for (k=0;k<=5;k++){
