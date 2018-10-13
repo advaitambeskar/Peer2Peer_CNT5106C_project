@@ -6,8 +6,9 @@ public class peerProcess {
     static Config config = new Config();
     static Logger logger = new Logger();
     static HashMap<Integer, Peer> peers = new HashMap<Integer, Peer>();
-    static Server server = null;
     static AtomicBoolean done = new AtomicBoolean(false);
+    static final int pieces = (config.getFileSize() + config.getPieceSize() - 1) / config.getPieceSize();
+    static AtomicBoolean [] bitfield = new AtomicBoolean [pieces];
 
     public static void checkIfDone() {
         peerProcess.logger.logDebug("peerProcess: checkIfDone");
@@ -18,13 +19,22 @@ public class peerProcess {
                 return;
             }
         }
+        for (AtomicBoolean b : bitfield) {
+            if (!b.get()) {
+                peerProcess.logger.logDebug("peerProcess: this process not done");
+                done.set(false);
+                return;
+            }
+        }
         peerProcess.logger.logDebug("peerProcess: done");
         done.set(true);
     }
 
     public static void main(String[] args) throws Exception {
         id = Integer.parseInt(args[0]);
-        logger.logDebug("this is for debugging only");
+        for(int i = 0; i < pieces; i++) {
+            bitfield[i] = new AtomicBoolean(false);
+        }
 
         // initialize peers
         for (Peer peer : config.getPeers()) {
@@ -33,7 +43,7 @@ public class peerProcess {
         }
 
         // start server
-        server = new Server();
+        Server server = new Server();
         server.start();
 
         // connect to peers

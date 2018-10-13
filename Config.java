@@ -22,4 +22,11 @@ public class Config {
         };
     }
 
+    public int getFileSize() {
+        return 1000000;
+    }
+
+    public int getPieceSize() {
+        return 100;
+    }
 }
