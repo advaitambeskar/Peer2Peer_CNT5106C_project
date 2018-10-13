@@ -22,4 +22,8 @@ public class Config {
         };
     }
 
+    public String getFileName() {
+        return null;
+    }
+
 }
