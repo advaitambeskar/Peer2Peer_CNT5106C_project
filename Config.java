@@ -72,12 +72,15 @@ import java.util.Properties;
 	//The following part are about how to read the user profile
 	 
  	public int getPort(){
+	
 		String[][] it_here=start_read("PeerInfo.cfg");
 		int k=0;
 		int final_result=0;
-		for (k=0;k<=5;k++){
+		for (k=0;k<it_here.length;k++){
+			if (it_here[k][2]!=null){
 			if (peerProcess.id==Integer.parseInt(it_here[k][2])){
 				final_result=Integer.parseInt(it_here[k][2]);
+			}
 			}
  		}
 		return final_result;
@@ -86,9 +89,12 @@ import java.util.Properties;
 		String[][] it_here=start_read("PeerInfo.cfg");
 		int k=0;
 		String final_result="";
-		for (k=0;k<=5;k++){
+		for (k=0;k<it_here.length;k++){
+			
+			if (it_here[k][2]!=null){
 			if (peerProcess.id==Integer.parseInt(it_here[k][2])){
 				final_result=it_here[k][1];
+			}
 			}
 		}
 		return final_result;
