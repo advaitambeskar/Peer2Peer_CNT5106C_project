@@ -89,7 +89,9 @@ import java.util.Properties;
 	}
 
     public Peer [] getPeers() {
-        return new Peer [] {
+	    String[][] it_here=start_read("/Users/qibing/Desktop/PeerInfo.cfg")
+        
+	    return new Peer [] {
             new Peer(11001, "localhost", 11001),
             new Peer(11002, "localhost", 11002),
             new Peer(11003, "localhost", 11003),
