@@ -89,13 +89,17 @@ import java.util.Properties;
 	}
 
     public Peer [] getPeers() {
-	    String[][] it_here=start_read("/Users/qibing/Desktop/PeerInfo.cfg")
+	    String[][] it_here=start_read("/Users/qibing/Desktop/PeerInfo.cfg");
+	    Peer[] peer=new Peer[100];
+	    for (int i=0;i<it_here.length;i++){
+		    peer[i]=new Peer(Integer.parseInt(it_here[i][0]),it_here[i][1],Integer.parseInt(it_here[i][2]),it_here[i][3])
+	    }
+	    
+	    
         
-	    return new Peer [] {
-            new Peer(11001, "localhost", 11001),
-            new Peer(11002, "localhost", 11002),
-            new Peer(11003, "localhost", 11003),
-        };
+	    return peer;
+       
+
     }
 
 }
