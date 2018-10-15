@@ -21,5 +21,13 @@ public class Config {
             new Peer(11003, "localhost", 11003),
         };
     }
+    
+    public int getFileSize(){
+    	return 0;
+    }
+    
+    public int getPieceSize(){
+    	return 0;
+    }
 
 }
