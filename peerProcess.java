@@ -8,6 +8,7 @@ public class peerProcess {
     static HashMap<Integer, Peer> peers = new HashMap<Integer, Peer>();
     static Server server = null;
     static AtomicBoolean done = new AtomicBoolean(false);
+    static final int pieces = 100;  // TODO: this is only a stub
     static FileManager filemanager = new FileManager(config.getFileName());
 
     public static void checkIfDone() {
