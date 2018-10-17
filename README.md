@@ -1,3 +1,5 @@
+[![Codefresh build status]( https://g.codefresh.io/api/badges/pipeline/zasdfgbnm/zasdfgbnm%2FCNT5106C-Computer-Networks-Project%2FCNT5106C-Computer-Networks-Project?branch=master&key=eyJhbGciOiJIUzI1NiJ9.NTk5ZmEwNzI2MTNhNTMwMDAxNTY4MmJm.nnVU1i-VQQSzPcsGxKnMC0wT-y9C2i8xuBZvUjlubYg&type=cf-1)]( https://g.codefresh.io/repositories/zasdfgbnm/CNT5106C-Computer-Networks-Project/builds?filter=trigger:build;branch:master;service:5bc77050a3686e05424e1c27~CNT5106C-Computer-Networks-Project)
+
 # Workflow to make changes
 
 1. Create a new branch for the change
