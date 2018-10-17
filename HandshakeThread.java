@@ -46,7 +46,7 @@ class HandshakeThread extends Thread {
 
             sendHandshake(output);
             peerid = consumeHandshake(input);
-            peerProcess.logger.logConnectedFrom(peerid);
+            peerProcess.logger.connectionFromPeer(peerid);
             Peer peer = peerProcess.peers.get(peerid);
             peer.msgstream = new MessageStream(input, output);
             peer.thread = new PeerThread(peer);

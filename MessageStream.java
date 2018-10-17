@@ -1,6 +1,9 @@
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.*;
+import java.util.*;
+import java.nio.*;
 
 // `MessageStream` wraps `DataInputStream` and `DataOutputStream` to provide API for
 // getting a the next `Message` object in a blocking manner, as well sending a `Message`
@@ -11,12 +14,12 @@ import java.util.concurrent.*;
 public class MessageStream {
     DataInputStream input;
     DataOutputStream output;
-    Mutex mutex;  // To make sure that only one thread are sending messages.
+    ReentrantLock mutex = new ReentrantLock(true);  // To make sure that only one thread are sending messages.
     MessageStream(DataInputStream input, DataOutputStream output) {
         this.input = input;
         this.output = output;
     }
-    private static String getMessageTypeString(byte type) {
+    private static String getMessageTypeString(byte type) throws Exception {
         // Convert the message type from byte to string. The mapping is given in the document.
         // this is pravite, and will only used internally in this class.
         switch (type) {
@@ -37,8 +40,9 @@ public class MessageStream {
         case 7:
             return "piece";
         }
+        throw new Exception("is this possible?");
     }
-    Message next() {
+    Message next() throws Exception {
         // Get the next document blockingly.
         // Messages have format [length][type][payload], here in this function,
         // we construct `Message` objects through from bytes in this format.
@@ -56,7 +60,7 @@ public class MessageStream {
         return new Message(type, Arrays.copyOfRange(buf, 1, buf.length));
     }
 
-    private void sendWithTypePayload(byte type, byte [] payload) {
+    private void sendWithTypePayload(byte type, byte [] payload) throws Exception {
         // Messages have format [length][type][payload], here in this function,
         // the type and payload is given, length is automatically computed, and
         // the final bytes are computed and sent throught output stream.
@@ -73,16 +77,16 @@ public class MessageStream {
         buf[3] = lengthbuf[3];
         buf[4] = type;
         System.arraycopy(payload, 0, buf, 5, payload.length);
-        mutex.acquire();
+        mutex.lock();
         output.write(buf, 0, buf.length);
-        mutex.release();
+        mutex.unlock();
     }
 
-    void send(Message msg) {
+    void send(Message msg) throws Exception {
         // Given `Message` object, convert it to bytes and send it using output stream
         // This is public, and designed to be used externally
         byte type;
-        switch (s) {
+        switch (msg.type) {
         case "choke":
             sendWithTypePayload((byte)0, null);
             return;
