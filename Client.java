@@ -14,7 +14,7 @@ public class Client {
             peer.msgstream = new MessageStream(input, output);
             peer.thread = new PeerThread(peer);
             peer.thread.start();
-            peerProcess.logger.logConnectTo(peerid);
+            peerProcess.logger.connectionToPeer(peerid);
         } catch (Exception e) {
             peerProcess.logger.logDebug("Exception raised at client when trying to establish connection to servers: " + e);
         }

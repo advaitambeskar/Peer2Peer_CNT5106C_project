@@ -115,7 +115,7 @@ class Message {
             throw new Exception("Trying to get piece from illegal message type, this must be a bug");
         return Arrays.copyOfRange(payload, 4, payload.length);
     }
-    public boolean [] getBitField() {
+    public boolean [] getBitField() throws Exception {
         // Get bitfields for bitfield type message
         if (type != "bitfield")
             throw new Exception("Trying to get bitfield from illegal message type, this must be a bug");

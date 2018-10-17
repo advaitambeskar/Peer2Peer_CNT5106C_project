@@ -10,6 +10,10 @@ import java.text.*;
 */
 
 public class Logger{
+    int id;
+    Logger(int id) {
+        this.id = id;
+    }
     
     /*
         LoggerFileSave log_save = new LoggerFileSave();
@@ -54,12 +58,17 @@ public class Logger{
         }
     }
 
+    public void logDebug(String s) {
+        System.out.println(s);
+    }
+
 
     /*
         TCP Connection Log  
      */
 
-    public boolean  connectionToPeer(int sourceID, int destinationID) throws Exception{
+    public boolean  connectionToPeer(int destinationID) throws Exception{
+        int sourceID = id;
         /*
              Function Description
             ----------------------
@@ -83,7 +92,8 @@ public class Logger{
         return true;
     }
 
-    public boolean  connectionFromPeer(int sourceID, int destinationID) throws Exception{
+    public boolean  connectionFromPeer(int sourceID) throws Exception{
+        int destinationID = id;
         /*
              Function Description
             ----------------------
