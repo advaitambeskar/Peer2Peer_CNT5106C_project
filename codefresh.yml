@@ -1,0 +1,8 @@
+version: '1.0'
+
+steps:
+
+  Compile:
+    image: 'openjdk'
+    commands:
+      - javac *.java
