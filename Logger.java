@@ -12,9 +12,10 @@ import java.text.*;
 public class Logger{
     
     /*
-        
+        LoggerFileSave log_save = new LoggerFileSave();
     */
     String fileStatus;
+    String log;
 
     /*
         Extra function to log timeout status
@@ -42,8 +43,10 @@ public class Logger{
             boolean         timeout                 stores the boolean value of connection status
 
         */
+        String log = "";
         if(timeout){
-            System.out.println("Sorry. The connection timed out.");
+            log = "Sorry. The connection timed out.";
+            System.out.println(log);
             return (!timeout);
         }
         else{
@@ -56,7 +59,7 @@ public class Logger{
         TCP Connection Log  
      */
 
-    public static boolean  connectionToPeer(int sourceID, int destinationID) throws Exception{
+    public boolean  connectionToPeer(int sourceID, int destinationID) throws Exception{
         /*
              Function Description
             ----------------------
@@ -73,11 +76,14 @@ public class Logger{
             
         */
         String time = timeFinder();
-        System.out.println(time + ": Peer " + Integer.toString(sourceID) + " makes connection to Peer " + Integer.toString(destinationID));
+        log = time + ": Peer " + Integer.toString(sourceID) + " makes connection to Peer " + Integer.toString(destinationID);
+        System.out.println(log);
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
 
-    public static boolean  connectionFromPeer(int sourceID, int destinationID) throws Exception{
+    public boolean  connectionFromPeer(int sourceID, int destinationID) throws Exception{
         /*
              Function Description
             ----------------------
@@ -94,7 +100,11 @@ public class Logger{
             
         */
         String time = timeFinder();
-        System.out.println(time + ": Peer " + Integer.toString(destinationID) + " is connected from Peer " + Integer.toString(sourceID));
+        log = time + ": Peer " + Integer.toString(destinationID) + " is connected from Peer " + Integer.toString(sourceID);
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(destinationID, log);
         return true;
     }
 
@@ -103,7 +113,7 @@ public class Logger{
         change of preferred neigbours
      */
     
-    public static boolean  preferredNeighborLog(int sourceID, int [] preferredList) throws Exception{
+    public boolean  preferredNeighborLog(int sourceID, int [] preferredList) throws Exception{
         /*
              Function Description
             ----------------------
@@ -127,7 +137,13 @@ public class Logger{
         }
         int length_preferredListString = preferredListString.length();
         preferredListString = preferredListString.substring(0, length_preferredListString-2);
-        System.out.println(time + ": Peer " +  Integer.toString(sourceID) + " has the preferred neighbors " + preferredListString);
+
+        log = time + ": Peer " +  Integer.toString(sourceID) + " has the preferred neighbors " + preferredListString;
+
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
 
@@ -153,7 +169,12 @@ public class Logger{
             
         */
         String time = timeFinder();
-        System.out.println(time +": Peer " + Integer.toString(sourceID) + " has the optimistically unchoked neighbor " + Integer.toString(unchokedID));
+
+        log = time +": Peer " + Integer.toString(sourceID) + " has the optimistically unchoked neighbor " + Integer.toString(unchokedID);
+        System.out.println();
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
 
@@ -178,7 +199,12 @@ public class Logger{
             
         */
         String time = timeFinder();
-        System.out.println(time + ": Peer "+ sourceID + " is unchoked by  Peer " + unchokedID);
+
+        log = time + ": Peer "+ sourceID + " is unchoked by  Peer " + unchokedID;
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
 
@@ -204,7 +230,12 @@ public class Logger{
             
         */
         String time = timeFinder();
-        System.out.println(time + ": Peer "+ sourceID + " is choked by  Peer " + chokedID);
+
+        log = time + ": Peer "+ sourceID + " is choked by  Peer " + chokedID;
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true; 
     }
 
@@ -230,7 +261,11 @@ public class Logger{
             String          time                time of activity
          */
         String time = timeFinder();
-        System.out.println(time + ": Peer " + destinationID + " received the 'have' message from Peer "+ sourceID + "for the piece " + pieceIndex + ".");
+        log = time + ": Peer " + destinationID + " received the 'have' message from Peer "+ sourceID + "for the piece " + pieceIndex + ".";
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
 
@@ -250,7 +285,12 @@ public class Logger{
             String          time                time of activity
          */
         String time = timeFinder();
-        System.out.println(time + ": Peer " + destinationID + " received the 'interested' message from Peer "+ sourceID + ".");
+
+        log = time + ": Peer " + destinationID + " received the 'interested' message from Peer "+ sourceID + ".";
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
     
@@ -271,7 +311,12 @@ public class Logger{
          */
 
         String time = timeFinder();
-        System.out.println(time + ": Peer " + destinationID + " received the 'not interested' message from Peer "+ sourceID + ".");
+
+        log = time + ": Peer " + destinationID + " received the 'not interested' message from Peer "+ sourceID + ".";
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
 
@@ -297,7 +342,12 @@ public class Logger{
          */
 
         String time = timeFinder();
-        System.out.println(time + ": Peer " + destinationID + " has downloaded piece " + pieceIndex + " from Peer " + sourceID + ". Now the number of pieces it has is "+ collectedPiece);
+
+        log = time + ": Peer " + destinationID + " has downloaded piece " + pieceIndex + " from Peer " + sourceID + ". Now the number of pieces it has is "+ collectedPiece;
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
     
@@ -320,7 +370,13 @@ public class Logger{
          */
 
         String time = timeFinder();
-        System.out.println(time + ": Peer " + sourceID + " has downloaded the complete file.");
+        
+        log = time + ": Peer " + sourceID + " has downloaded the complete file.";
+
+        System.out.println(log);
+
+        LoggerFileSave log_save = new LoggerFileSave();
+        log_save.fileOpenWriteClose(sourceID, log);
         return true;
     }
 
