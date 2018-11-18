@@ -9,6 +9,19 @@
 
 # Design doc
 
+The whole program includes many parts, including
+- config reader
+- logger
+- handshake manager
+- messages
+- TODO
+
+## Message Stream
+
+The interface that java provide us for network programming is to interact with the socket through `DataInputStream` and `DataOutputStream`. This is not conventient to use because we have to deal with message formatting, etc. The message streaming subsystem is composed of two classes, `Message` and `MessageStream`, where `Message` is a class for storing a single message, and `MessageStream` wraps `DataInputStream` and `DataOutputStream` to provide API for getting a the next `Message` object in a blocking manner, as well sending a `Message` object by serializing it using the format specified in the document.
+
+## Overall framework
+
 Each `peerProcess` has a server thread implemented in class `Server` that accepts connections from other peers. The server thead does not implement anything about the protocol.
 
 After accepting the connection, for each connection, there will be a `HandshakeThread` that does the handshake. Once handshake is done, a `MessageStream` will be created for that peer. `MessageStream` wraps the `Socket` that allow us extract and send whole `Message`s instead of byte arrays.

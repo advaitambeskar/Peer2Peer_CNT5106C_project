@@ -69,15 +69,25 @@ public class FileManager {
     	}
     		
     	RandomAccessFile file1=new RandomAccessFile(filename,"rw");
+<<<<<<< HEAD
     	file1.setLength(fileSize);
     	
     	int pierce_length=calculate_length(index);
     	
     	long place=(long)(index*pierceSize);
+=======
+    	int pierce_length=calculate_length(index);
+    	
+    	long place=(long)(index*pierce_length);
+>>>>>>> a646c34e0084ea3790f353f8b174d1de9fd37920
     	file1.seek(place);
     	
     	file1.write(payload);
     	
+<<<<<<< HEAD
+=======
+        return;
+>>>>>>> a646c34e0084ea3790f353f8b174d1de9fd37920
     }
     
     public static void main(String[] args){
