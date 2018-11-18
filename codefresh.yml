@@ -1,0 +1,15 @@
+version: '1.0'
+
+steps:
+
+  Build:
+    type: build
+    description: Build
+    image_name: java
+    dockerfile: Dockerfile
+    tag: latest
+
+  Compile:
+    image: '${{Build}}'
+    commands:
+      - javac *.java

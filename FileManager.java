@@ -7,15 +7,17 @@ public class FileManager {
     String filename;
     static Config config=new Config();
     private RandomAccessFile file;
-	static int fileSize=config.getFileSize();
-	static int pierceSize=config.getPieceSize();
-	static int total_piece_size=divdier(fileSize,pierceSize); 
-    
+	static int fileSize;
+	static int pierceSize;
+	static int total_piece_size;
 
-    FileManager(String filename) {
-        this.filename = filename;
+    FileManager(String filename) throws Exception {
+		this.filename = filename;
+		fileSize=config.getFileSize();
+		pierceSize=config.getPieceSize();
+		total_piece_size=divdier(fileSize,pierceSize);
     }
-    
+
     static int divdier(int x, int y){
 		int final_result=0;
 		if (x%y==0){
