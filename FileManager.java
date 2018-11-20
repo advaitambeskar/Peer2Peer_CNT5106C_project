@@ -16,6 +16,9 @@ public class FileManager {
 		
 		fileSize=100;
 		pierceSize=2;
+		/*
+		 * make changes on file size and pierce size here
+		 */
 
 		//fileSize=config.getFileSize();
 		//pierceSize=config.getPieceSize();
@@ -72,6 +75,11 @@ public class FileManager {
     }
     
     //will be called when the peer received such a pierce to write the data into disk
+    /*
+     * functions include: 1) create a file named peerid+
+     *  2) create a txt under the peerid file
+     *  3) write the data into the txt file based on the index number
+     */
     public void setPiece(int index, byte [] payload) throws IOException {
     	String place1="/Users/qibing/Desktop/peer_"+peerProcess.id;
     	File newfile=new File(place1);
@@ -146,6 +154,7 @@ public class FileManager {
     	    	System.out.println("Match");
     	    }else{
     	    	System.out.println("Does not match");
+    	    	System.exit(1);
     	    }
     	 }
     	 
