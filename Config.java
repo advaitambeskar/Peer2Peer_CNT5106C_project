@@ -175,9 +175,9 @@ public class Config {
 		int final_result=0;
 		for (k=0;k<it_here.length;k++){
 			
-			if (it_here[k][2]!=null){
+			if (it_here[k][0]!=null){
 				
-			if (peerProcess.id==Integer.parseInt(it_here[k][2])){
+			if (peerProcess.id==Integer.parseInt(it_here[k][0])){
 				final_result=Integer.parseInt(it_here[k][2]);
 			} 
 			}
@@ -185,6 +185,23 @@ public class Config {
 		}
 		return final_result;
 		
+	}
+
+	public boolean getIHaveFile() throws IOException{
+		/*
+		 * return the port number
+		 */
+		String[][] it_here=start_read("PeerInfo.cfg");
+		int k=0;
+		boolean final_result = false;
+		for (k=0;k<it_here.length;k++){
+			if (it_here[k][0]!=null){
+				if (peerProcess.id==Integer.parseInt(it_here[k][0])){
+					final_result = (Integer.parseInt(it_here[k][3])==1);
+				}
+			}
+		}
+		return final_result;
 	}
 	
 	public String getHostName() throws IOException{

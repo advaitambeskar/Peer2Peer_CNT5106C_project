@@ -13,3 +13,4 @@ steps:
     image: '${{Build}}'
     commands:
       - javac *.java
+      - timeout 100 ./run.sh

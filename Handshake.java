@@ -3,10 +3,10 @@ import java.io.*;
 import java.nio.*;
 import java.util.*;
 
-class HandshakeThread extends Thread {
+class Handshake {
     public Socket connection;
     int peerid;
-    HandshakeThread(Socket connection) {
+    Handshake(Socket connection) {
         this.connection = connection;
     }
 
@@ -39,21 +39,24 @@ class HandshakeThread extends Thread {
         return peerid;
     }
 
-    public void run() {
+    public int run() {
         try {
             DataInputStream input = new DataInputStream(connection.getInputStream());
             DataOutputStream output =  new DataOutputStream(connection.getOutputStream());
-
             sendHandshake(output);
             peerid = consumeHandshake(input);
-            peerProcess.logger.connectionFromPeer(peerid);
             Peer peer = peerProcess.peers.get(peerid);
-            peer.msgstream = new MessageStream(input, output);
+            if (peer.msgstream != null)
+                throw new Exception("Creating message stream for peer more than once");
+            peer.msgstream = new MessageStream(peer, connection, input, output);
+            if (peer.thread != null)
+                throw new Exception("Creating thread for peer more than once");
             peer.thread = new PeerThread(peer);
             peer.thread.start();
-            peerProcess.logger.logDebug("HandshakeThread: exit normally");
+            return peerid;
         } catch (Exception e) {
             peerProcess.logger.logDebug("Exception raised during handshake: " + e);
         }
+        return -1;
     }
 }

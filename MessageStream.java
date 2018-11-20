@@ -12,10 +12,14 @@ import java.nio.*;
 // a `Message` object from the stream, and `send` send a `Message` object to the stream.
 
 public class MessageStream {
+    Peer peer;
+    Socket connection;
     DataInputStream input;
     DataOutputStream output;
     ReentrantLock mutex = new ReentrantLock(true);  // To make sure that only one thread are sending messages.
-    MessageStream(DataInputStream input, DataOutputStream output) {
+    MessageStream(Peer peer, Socket connection, DataInputStream input, DataOutputStream output) {
+        this.connection = connection;
+        this.peer = peer;
         this.input = input;
         this.output = output;
     }
@@ -46,11 +50,17 @@ public class MessageStream {
         // Get the next document blockingly.
         // Messages have format [length][type][payload], here in this function,
         // we construct `Message` objects through from bytes in this format.
-
+        // peerProcess.logger.logDebug("waiting for next message");
         // get message length
         byte [] lengthbuf = new byte[4];
-        input.read(lengthbuf);
+        int bytes_read = input.read(lengthbuf);
+        if(bytes_read < 4) {  // connection closed.
+            connection.close();
+            connection = null;
+            return new Message("terminate", null);  // special message to terminate thread.
+        }
         int length = ByteBuffer.wrap(lengthbuf).getInt();
+        // peerProcess.logger.logDebug("recv msg length = " + length);
         // read the rest of the message
         byte [] buf = new byte[length];
         input.read(buf);
@@ -71,12 +81,14 @@ public class MessageStream {
         int length = 1 + payload.length;
         byte [] buf = new byte[payload.length + 5];
         byte [] lengthbuf = Message.int2byte(length);
+        // peerProcess.logger.logDebug("send msg length = " + length);
         buf[0] = lengthbuf[0];
         buf[1] = lengthbuf[1];
         buf[2] = lengthbuf[2];
         buf[3] = lengthbuf[3];
         buf[4] = type;
         System.arraycopy(payload, 0, buf, 5, payload.length);
+        peerProcess.logger.logSendRawMsg(peer.id, buf);
         mutex.lock();
         output.write(buf, 0, buf.length);
         mutex.unlock();

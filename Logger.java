@@ -4,22 +4,40 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
 import java.text.*;
+import java.net.*;
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
+import java.text.*;
+import java.nio.file.*;
 
 /*
     
 */
 
 public class Logger{
-    int id;
-    Logger(int id) {
-        this.id = id;
-    }
-    
+    boolean debug = true;
+
     /*
         LoggerFileSave log_save = new LoggerFileSave();
     */
     String fileStatus;
-    String log;
+    PrintWriter print;
+
+    Logger() throws Exception {
+        FileWriter file = null;
+        String path = "./log/log_peer_" + Integer.toString(peerProcess.id) + ".log";
+        boolean append_to_file = true;
+        try {
+            File f = new File("./log");
+            f.mkdirs();
+            Files.createFile(Paths.get(path));
+        } catch (FileAlreadyExistsException ex) { }
+        file = new FileWriter(path, append_to_file);
+        print = new PrintWriter(file);
+    }
 
     /*
         Extra function to log timeout status
@@ -27,39 +45,19 @@ public class Logger{
 
     public static String timeFinder(){
         Date date = new Date();
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd 'at' hh:mm:ss");
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss.SSS");
 
         String time = ft.format(date);
         return time;
     }
 
-    public static boolean statusTimeout(boolean timeout){
-        /*
-             Function Description
-            ----------------------
-            Name            statusTimeout
-            Return type     boolean
-            Description     prints when the status timeout occurs
-
-             Data Variables
-            ----------------
-            Datatype        VariableName            Information
-            boolean         timeout                 stores the boolean value of connection status
-
-        */
-        String log = "";
-        if(timeout){
-            log = "Sorry. The connection timed out.";
-            System.out.println(log);
-            return (!timeout);
-        }
-        else{
-            return (!timeout);
-        }
-    }
-
     public void logDebug(String s) {
-        System.out.println(s);
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": [" + peerProcess.id + "] " + s;
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
     }
 
 
@@ -68,7 +66,7 @@ public class Logger{
      */
 
     public boolean  connectionToPeer(int destinationID) throws Exception{
-        int sourceID = id;
+        int sourceID = peerProcess.id;
         /*
              Function Description
             ----------------------
@@ -85,15 +83,15 @@ public class Logger{
             
         */
         String time = timeFinder();
-        log = time + ": Peer " + Integer.toString(sourceID) + " makes connection to Peer " + Integer.toString(destinationID);
+        String log = time + ": Peer " + Integer.toString(sourceID) + " makes connection to Peer " + Integer.toString(destinationID);
         System.out.println(log);
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
 
     public boolean  connectionFromPeer(int sourceID) throws Exception{
-        int destinationID = id;
+        int destinationID = peerProcess.id;
         /*
              Function Description
             ----------------------
@@ -110,11 +108,10 @@ public class Logger{
             
         */
         String time = timeFinder();
-        log = time + ": Peer " + Integer.toString(destinationID) + " is connected from Peer " + Integer.toString(sourceID);
+        String log = time + ": Peer " + Integer.toString(destinationID) + " is connected from Peer " + Integer.toString(sourceID);
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(destinationID, log);
+        print.println(log); print.flush();
         return true;
     }
 
@@ -123,7 +120,7 @@ public class Logger{
         change of preferred neigbours
      */
     
-    public boolean  preferredNeighborLog(int sourceID, int [] preferredList) throws Exception{
+    public boolean  preferredNeighborLog(Peer [] preferredList) throws Exception{
         /*
              Function Description
             ----------------------
@@ -140,20 +137,24 @@ public class Logger{
             String          time                provides time of connection, in String
             
         */
+        int sourceID = peerProcess.id;
         String time = timeFinder();
         String preferredListString = "";
         for(int i = 0; i < preferredList.length; i++){
-            preferredListString = preferredListString  + Integer.toString(i) + ", ";
+            Peer p = preferredList[i];
+            if (p != null)
+                preferredListString = preferredListString  + Integer.toString(p.id) + ", ";
         }
         int length_preferredListString = preferredListString.length();
-        preferredListString = preferredListString.substring(0, length_preferredListString-2);
+        if (preferredListString.length() > 0)
+            preferredListString = preferredListString.substring(0, length_preferredListString-2);
 
-        log = time + ": Peer " +  Integer.toString(sourceID) + " has the preferred neighbors " + preferredListString;
+        String log = time + ": Peer " +  Integer.toString(sourceID) + " has the preferred neighbors " + preferredListString;
 
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
 
@@ -162,7 +163,7 @@ public class Logger{
         change of optimistically unchoked neighbor
      */
     
-    public boolean optimisticallyUnchokedLog(int sourceID, int unchokedID){
+    public boolean optimisticallyUnchokedLog(Peer unchokedID){
         /*
              Function Description
             ----------------------
@@ -178,13 +179,14 @@ public class Logger{
             String       time                provides time of connection, in String
             
         */
+        int sourceID = peerProcess.id;
         String time = timeFinder();
 
-        log = time +": Peer " + Integer.toString(sourceID) + " has the optimistically unchoked neighbor " + Integer.toString(unchokedID);
-        System.out.println();
+        String log = time +": Peer " + Integer.toString(sourceID) + " has the optimistically unchoked neighbor " + Integer.toString(unchokedID.id);
+        System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
 
@@ -192,7 +194,7 @@ public class Logger{
         unchoking
      */
 
-    public boolean unchokedLog(int sourceID, int unchokedID){
+    public boolean unchokedLog(int unchokedID){
         /*
              Function Description
             ----------------------
@@ -208,13 +210,14 @@ public class Logger{
             String       time                provides time of connection, in String
             
         */
+        int sourceID = peerProcess.id;
         String time = timeFinder();
 
-        log = time + ": Peer "+ sourceID + " is unchoked by  Peer " + unchokedID;
+        String log = time + ": Peer "+ sourceID + " is unchoked by Peer " + unchokedID + ".";
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
 
@@ -223,7 +226,7 @@ public class Logger{
      *  choking
      */
 
-    public boolean chokedLog(int sourceID, int chokedID){
+    public boolean chokedLog(int chokedID){
        /*
              Function Description
             ----------------------
@@ -239,14 +242,15 @@ public class Logger{
             String       time                provides time of connection, in String
             
         */
+        int sourceID = peerProcess.id;
         String time = timeFinder();
 
-        log = time + ": Peer "+ sourceID + " is choked by  Peer " + chokedID;
+        String log = time + ": Peer "+ sourceID + " is choked by Peer " + chokedID;
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
-        return true; 
+        
+        print.println(log); print.flush();
+        return true;
     }
 
 
@@ -254,7 +258,7 @@ public class Logger{
         receiving messages
      */
 
-    public boolean messageHaveLog(int sourceID, int destinationID, int pieceIndex){
+    public boolean messageHaveLog(int sourceID, int pieceIndex){
         /*
              Function Description
             ----------------------
@@ -270,16 +274,17 @@ public class Logger{
             int             pieceIndex          provide index of piece destination has
             String          time                time of activity
          */
+        int destinationID = peerProcess.id;
         String time = timeFinder();
-        log = time + ": Peer " + destinationID + " received the 'have' message from Peer "+ sourceID + "for the piece " + pieceIndex + ".";
+        String log = time + ": Peer " + destinationID + " received the 'have' message from Peer "+ sourceID + " for the piece " + pieceIndex + ".";
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
 
-    public boolean messageInterestedLog(int sourceID, int destinationID){
+    public boolean messageInterestedLog(int sourceID){
         /*
              Function Description
             ----------------------
@@ -294,17 +299,18 @@ public class Logger{
             int             destinationID       provide the peer ID of destination
             String          time                time of activity
          */
+        int destinationID = peerProcess.id;
         String time = timeFinder();
 
-        log = time + ": Peer " + destinationID + " received the 'interested' message from Peer "+ sourceID + ".";
+        String log = time + ": Peer " + destinationID + " received the 'interested' message from Peer "+ sourceID + ".";
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
     
-    public boolean messageNotInterestedLog(int sourceID, int destinationID){
+    public boolean messageNotInterestedLog(int sourceID){
         /*
              Function Description
             ----------------------
@@ -319,14 +325,15 @@ public class Logger{
             int             destinationID       provide the peer ID of destination
             String          time                time of activity
          */
+        int destinationID = peerProcess.id;
 
         String time = timeFinder();
 
-        log = time + ": Peer " + destinationID + " received the 'not interested' message from Peer "+ sourceID + ".";
+        String log = time + ": Peer " + destinationID + " received the 'not interested' message from Peer "+ sourceID + ".";
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
 
@@ -334,7 +341,7 @@ public class Logger{
     /*
         Piece Download
      */
-    public boolean pieceDownload(int sourceID, int destinationID, int pieceIndex, int collectedPiece){
+    public boolean pieceDownload(int sourceID, int pieceIndex){
         /*
              Function Description
             ----------------------
@@ -350,21 +357,32 @@ public class Logger{
             int             pieceIndex          provide index of piece downloaded
             String          time                time of activity
          */
+        int destinationID = peerProcess.id;
 
         String time = timeFinder();
 
-        log = time + ": Peer " + destinationID + " has downloaded piece " + pieceIndex + " from Peer " + sourceID + ". Now the number of pieces it has is "+ collectedPiece;
+        peerProcess.bitfield_mutex.lock();
+        int collectedPiece = 0;
+        for(boolean i : peerProcess.bitfield) {
+            if(i) collectedPiece++;
+        }
+        peerProcess.bitfield_mutex.unlock();
+
+        String log = time + ": Peer " + destinationID + " has downloaded piece " + pieceIndex + " from Peer " + sourceID + ". Now the number of pieces it has is "+ collectedPiece;
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
+        if (collectedPiece == peerProcess.pieces) {
+            fileDownload();
+        }
         return true;
     }
     
     /*
         File Download
      */
-    public boolean fileDownload(int sourceID){
+    public boolean fileDownload(){
         /*
              Function Description
             ----------------------
@@ -378,16 +396,79 @@ public class Logger{
             int             sourceID            provide the peer ID of host
             String          time                time of activity
          */
+        int sourceID = peerProcess.id;
 
         String time = timeFinder();
         
-        log = time + ": Peer " + sourceID + " has downloaded the complete file.";
+        String log = time + ": Peer " + sourceID + " has downloaded the complete file.";
 
         System.out.println(log);
 
-        LoggerFileSave log_save = new LoggerFileSave();
-        log_save.fileOpenWriteClose(sourceID, log);
+        
+        print.println(log); print.flush();
         return true;
     }
 
+    public void logRequest(int pieceid, int from) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": Peer " + peerProcess.id + " is requested piece " + pieceid + " by " + from + ".";
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
+    public void logBitField(int from, boolean []bitfield) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": Peer " + peerProcess.id + " received bitfield message from " + from + ": ";
+            for(boolean b : bitfield) {
+                log += b?'1':'0';
+            }
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
+    public void logSendBitField(int from, boolean []bitfield) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": Peer " + peerProcess.id + " is sending bitfield message to " + from + ": ";
+            for(boolean b : bitfield) {
+                log += b?'1':'0';
+            }
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
+    public void logSendPiece(int pieceid, int to) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": Peer " + peerProcess.id + " is sending piece " + pieceid + " to " + to + ".";
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
+    public void logSendRequest(int pieceid, int to) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": Peer " + peerProcess.id + " is sending request of " + pieceid + " to " + to + ".";
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
+    public void logSendRawMsg(int to, byte [] buf) {
+        if (false && debug) {
+            String time = timeFinder();
+            String log = time + ": Peer " + peerProcess.id + " is sending raw message to " + to + ": ";
+            for(byte b:buf) {
+                log += String.format("%02X ", b);
+            }
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
 }
