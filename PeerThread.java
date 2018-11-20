@@ -66,7 +66,8 @@ public class PeerThread extends Thread {
                         }
                         // increase counter
                         peer.recv_count.addAndGet(1);
-                        // TODO: write this peice to file
+                        // write this peice to file
+                        peerProcess.filemanager.setPiece(pieceid, msg.getPiece());
                         // request another piece
                         if(!peer.choked_by.get() && peer.interested_in()) {
                             peer.requestNewPiece();

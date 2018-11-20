@@ -2,15 +2,15 @@
 
 set -e
 javac *.java
-java -cp . peerProcess 1001 | tee log/1001.stdout.txt &
+java -cp . peerProcess 1001 &
 sleep 1
-java -cp . peerProcess 1002 | tee log/1002.stdout.txt &
+java -cp . peerProcess 1002 &
 sleep 1
-java -cp . peerProcess 1003 | tee log/1003.stdout.txt &
+java -cp . peerProcess 1003 &
 sleep 1
-java -cp . peerProcess 1004 | tee log/1004.stdout.txt &
+java -cp . peerProcess 1004 &
 sleep 1
-java -cp . peerProcess 1005 | tee log/1005.stdout.txt &
+java -cp . peerProcess 1005 &
 sleep 1
-java -cp . peerProcess 1006 | tee log/1006.stdout.txt &
+java -cp . peerProcess 1006 &
 wait

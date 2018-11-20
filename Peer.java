@@ -100,7 +100,7 @@ public class Peer {
     }
 
     public void sendPiece(int pieceid) throws Exception {
-        msgstream.send(Message.createPiece(pieceid, null));  //TODO: fill piece with data
+        msgstream.send(Message.createPiece(pieceid, peerProcess.filemanager.getPiece(pieceid)));
         peerProcess.logger.logSendPiece(pieceid, id);
     }
 }
