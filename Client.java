@@ -7,13 +7,7 @@ public class Client {
         try {
             Peer peer = peerProcess.peers.get(peerid);
             Socket socket = new Socket(peer.host, peer.port);
-            DataInputStream input = new DataInputStream(socket.getInputStream());
-            DataOutputStream output =  new DataOutputStream(socket.getOutputStream());
-            HandshakeThread.sendHandshake(output);
-            HandshakeThread.consumeHandshake(input);
-            peer.msgstream = new MessageStream(input, output);
-            peer.thread = new PeerThread(peer);
-            peer.thread.start();
+            new Handshake(socket).run();
             peerProcess.logger.connectionToPeer(peerid);
         } catch (Exception e) {
             peerProcess.logger.logDebug("Exception raised at client when trying to establish connection to servers: " + e);

@@ -23,10 +23,10 @@ class Message {
         byte [] buf = new byte[4];
         ByteBuffer int2bytes = ByteBuffer.allocate(4);
         int2bytes.putInt(i);
-        buf[28] = int2bytes.get(0);
-        buf[29] = int2bytes.get(1);
-        buf[30] = int2bytes.get(2);
-        buf[31] = int2bytes.get(3);
+        buf[0] = int2bytes.get(0);
+        buf[1] = int2bytes.get(1);
+        buf[2] = int2bytes.get(2);
+        buf[3] = int2bytes.get(3);
         return buf;
     }
 
@@ -51,11 +51,16 @@ class Message {
         for (int i = 0; i < bitmap.length; i++) {
             int byteidx = i / 8;
             int byteshift = i % 8;
-            bitmap[i] = ((buf[byteidx] | ((byte)1 << byteshift)) != 0);
+            bitmap[i] = ((buf[byteidx] & ((byte)1 << byteshift)) != 0);
         }
         boolean [] result = new boolean [peerProcess.pieces];
         System.arraycopy(bitmap, 0, result, 0, result.length);
         return result;
+    }
+
+    public static int pack(int c1, int c2, int c3, int c4)
+    {
+        return ((c1 << 24) | (c2 << 16) | (c3 << 8) | (c4));
     }
 
     // The following static methods, i.e. those starting with `create`,
@@ -85,6 +90,8 @@ class Message {
     }
     public static Message createPiece(int index, byte [] buf) {
         // we should wait until file manager is implemented
+        if(buf == null)
+            buf = new byte[0];
         int length = buf.length;
         byte [] idx = int2byte(index);
         byte [] whole = new byte[buf.length + 4];
@@ -93,7 +100,7 @@ class Message {
         whole[2] = idx[2];
         whole[3] = idx[3];
         System.arraycopy(buf, 0, whole, 4, buf.length);
-        return new Message("piece", null);
+        return new Message("piece", whole);
     }
 
     // End of message factories
@@ -105,7 +112,7 @@ class Message {
         case "have":
         case "request":
         case "piece":
-            return ByteBuffer.wrap(Arrays.copyOfRange(payload, 0, 4)).getInt();
+            return pack(payload[0] & 0xFF, payload[1] & 0xFF, payload[2] & 0xFF, payload[3] & 0xFF);
         }
         throw new Exception("Trying to get int payload from illegal message type, this must be a bug");
     }

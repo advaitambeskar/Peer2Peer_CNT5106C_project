@@ -6,20 +6,26 @@ import java.net.*;
 // other parts of protocols are implemented here.
 
 class Server extends Thread {
+    boolean done() {
+        for(Peer p:peerProcess.peers.values()) {
+            if(p.msgstream == null || p.thread==null)
+                return false;
+        }
+        return true;
+    }
+
     public void run() {
         try {
             ServerSocket listener = new ServerSocket(peerProcess.config.getPort());
-            listener.setSoTimeout(1000);
-            while (!peerProcess.done.get()) {
+            listener.setSoTimeout(100);
+            while (!done()) {
                 try {
-                    new HandshakeThread(listener.accept()).start();
-                    peerProcess.logger.logDebug("Server: new connection accepted");
-                } catch (SocketTimeoutException e) {
-                    peerProcess.logger.logDebug("Server: timeout");
-                }
+                    int peerid = new Handshake(listener.accept()).run();
+                    peerProcess.logger.connectionFromPeer(peerid);
+                } catch (SocketTimeoutException e) {}
             }
+            peerProcess.logger.logDebug("Everybody is connected, closing server.");
             listener.close();
-            peerProcess.logger.logDebug("Server: exit");
         } catch (Exception e) {
             peerProcess.logger.logDebug("Exception raised in server thread: " + e);
         }
