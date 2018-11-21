@@ -2,85 +2,65 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.concurrent.locks.*;
 
 public class FileManager {
     String filename;
-    static Config config=new Config();
     private RandomAccessFile file;
 	static int fileSize;
 	static int pierceSize;
 	static int total_piece_size;
+    static ReentrantLock mutex = new ReentrantLock(true);
 
     FileManager(String filename) throws Exception {
 		this.filename = filename;
-		fileSize=config.getFileSize();
-		pierceSize=config.getPieceSize();
-		total_piece_size=divdier(fileSize,pierceSize);
+		fileSize = peerProcess.config.getFileSize();
+		pierceSize = peerProcess.config.getPieceSize();
+		total_piece_size = (fileSize + pierceSize - 1) / pierceSize;
+
+		File newfile = new File(filename);
+    	if (!newfile.exists()){
+    		newfile.getParentFile().mkdirs();
+		}
+
+    	file = new RandomAccessFile(filename,"rw");
     }
 
-    static int divdier(int x, int y){
-		int final_result=0;
-		if (x%y==0){
-			final_result=x/y;
-		}else{
-			final_result=x/y+1;
-		}
-    	return final_result;
-    	
-    }
-    
     static int calculate_length(int index){
-    	int pierce_length=pierceSize;
-    	if (index==total_piece_size){
-    		pierce_length=fileSize-(index-1)*pierceSize;
-    	}else{
-    		pierce_length=pierceSize;
+    	if (fileSize % pierceSize != 0 && index == total_piece_size - 1){
+    		return fileSize % pierceSize;
     	}
-    	return pierce_length;
+    	return pierceSize;
     }
-    //return the data for that pierce
-    
-    //index here means the number of the data pierce.  MIGHT REDUCE 1!!!!!!! 
-    public byte [] getPiece(int index) throws IOException {
-    	int fileSize=config.getFileSize();
-    	int pierceSize=config.getPieceSize();
-    	int total_piece_size=divdier(fileSize,pierceSize); 
-    	
-    	int pierce_length=calculate_length(index);
-    	
-    	byte[] pierce_needed=new byte[pierce_length];
-    	
-    	byte[] requested_data=new byte[pierce_length];
-    	
-    	file=new RandomAccessFile(filename,"rw");
-    	long place= (long) (index-1)*pierceSize;
+
+    public byte [] getPiece(int index) throws Exception {
+		int piece_length = calculate_length(index);
+		long place = ((long)index) * pierceSize;
+		byte [] buf = new byte[piece_length];
+		mutex.lock();
     	file.seek(place);
-    	file.read(pierce_needed);
-    	
-    	System.arraycopy(pierce_needed, 0, requested_data, 0,pierce_needed.length);
-    	
-        return requested_data;
+		int l = file.read(buf);
+		mutex.unlock();
+		if (l < piece_length) {
+			throw new Exception("failed to read expected length of file");
+		}
+        return buf;
     }
-    
+
     //will be called when the peer received such a pierce to write the data into disk
-    public void setPiece(int index, byte [] payload) throws IOException {
-    	String filename="/Users/qibing/Desktop/peer_"+peerProcess.id;
-    	File newfile=new File(filename);
-    	if (!newfile.exists()){
-    		newfile.mkdirs();
-    	}
-    		
-    	RandomAccessFile file1=new RandomAccessFile(filename,"rw");
-    	int pierce_length=calculate_length(index);
-    	
-    	long place=(long)(index*pierce_length);
-    	file1.seek(place);
-    	
-    	file1.write(payload);
-    	
+    public void setPiece(int index, byte [] payload) throws Exception {
+		int piece_length = calculate_length(index);
+		if (payload.length < piece_length) {
+			throw new Exception("failed to read expected length of file");
+		}
+		long place = ((long)index) * pierceSize;
+    	mutex.lock();
+    	file.seek(place);
+    	file.write(payload);
+    	mutex.unlock();
         return;
     }
-    
+
     public static void main(String[] args){
     	//System.out.println(divdier(10000232,32768));
     }

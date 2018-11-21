@@ -9,7 +9,7 @@ public class peerProcess {
     static Logger logger;
     static HashMap<Integer, Peer> peers = new HashMap<Integer, Peer>();
     static Server server = null;
-    static FileManagerStub filemanager;
+    static FileManager filemanager;
     static int pieces;
     static boolean [] bitfield;
     static ReentrantLock bitfield_mutex = new ReentrantLock(true);
@@ -129,7 +129,6 @@ public class peerProcess {
     public static void main(String[] args) throws Exception {
         id = Integer.parseInt(args[0]);
         logger = new Logger();
-        filemanager = new FileManagerStub(config.getFileName());
         int filesize = config.getFileSize();
         int piecesize = config.getPieceSize();
         pieces = (filesize + piecesize - 1) / piecesize;
@@ -143,6 +142,7 @@ public class peerProcess {
         }
         bitfield_mutex.unlock();
         if(havefile) logger.fileDownload();
+        filemanager = new FileManager("peer_" + id + "/" + config.getFileName());
 
         // initialize peers
         for (Peer peer : config.getPeers()) {
