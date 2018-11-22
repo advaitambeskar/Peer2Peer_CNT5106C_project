@@ -88,7 +88,8 @@ public class MessageStream {
         buf[3] = lengthbuf[3];
         buf[4] = type;
         System.arraycopy(payload, 0, buf, 5, payload.length);
-        peerProcess.logger.logSendRawMsg(peer.id, buf);
+        if (peer != null)
+            peerProcess.logger.logSendRawMsg(peer.id, buf);
         mutex.lock();
         output.write(buf, 0, buf.length);
         mutex.unlock();
