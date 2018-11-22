@@ -26,7 +26,7 @@ public class MessageStream {
     private static String getMessageTypeString(byte type) throws Exception {
         // Convert the message type from byte to string. The mapping is given in the document.
         // this is pravite, and will only used internally in this class.
-        switch (type) {
+        switch (type & 0xFF) {
         case 0:
             return "choke";
         case 1:
