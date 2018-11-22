@@ -18,7 +18,7 @@ import java.nio.file.*;
 */
 
 public class Logger{
-    boolean debug = false;
+    boolean debug = true;
 
     /*
         LoggerFileSave log_save = new LoggerFileSave();
