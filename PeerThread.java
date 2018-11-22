@@ -83,7 +83,7 @@ public class PeerThread extends Thread {
         } catch (Exception e) {
             StringWriter outError = new StringWriter();
             e.printStackTrace(new PrintWriter(outError));
-            peerProcess.logger.logDebug("Exception raised in PeerThread: " + outError.toString());
+            peerProcess.logger.logDebugPeer(peer.id, "Exception raised in PeerThread: " + outError.toString());
         }
     }
 }

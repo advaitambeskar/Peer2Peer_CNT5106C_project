@@ -60,6 +60,15 @@ public class Logger{
         }
     }
 
+    public void logDebugPeer(int id, String s) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": [" + peerProcess.id + " with " + id + "] " + s;
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
 
     /*
         TCP Connection Log  
