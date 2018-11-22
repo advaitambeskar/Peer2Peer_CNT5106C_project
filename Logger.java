@@ -460,6 +460,16 @@ public class Logger{
         }
     }
 
+    public void logSendRequestNothing(int to) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": Peer " + peerProcess.id + " is trying to send request to " + to + ", but nothing it can provide.";
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
+
     public void logSendRawMsg(int to, byte [] buf) {
         if (false && debug) {
             String time = timeFinder();

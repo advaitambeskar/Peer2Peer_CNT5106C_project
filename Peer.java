@@ -89,14 +89,16 @@ public class Peer {
                 overlap.add(i);
             }
         }
+        bitfield_mutex.unlock();
+        peerProcess.bitfield_mutex.unlock();
         if (overlap.size() > 0) {
             int index = ThreadLocalRandom.current().nextInt(overlap.size());
             index = overlap.get(index);
             peerProcess.logger.logSendRequest(index, id);
             msgstream.send(Message.createRequest(index));
+        } else {
+            peerProcess.logger.logSendRequestNothing(id);
         }
-        bitfield_mutex.unlock();
-        peerProcess.bitfield_mutex.unlock();
     }
 
     public void sendPiece(int pieceid) throws Exception {
