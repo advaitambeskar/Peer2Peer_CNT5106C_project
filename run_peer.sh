@@ -2,4 +2,4 @@
 
 set -e
 javac *.java
-java -cp . peerProcess $1
+java -Xmx1024m -cp . peerProcess $1
