@@ -60,6 +60,15 @@ public class Logger{
         }
     }
 
+    public void logDebugPeer(int id, String s) {
+        if (debug) {
+            String time = timeFinder();
+            String log = time + ": [" + peerProcess.id + " with " + id + "] " + s;
+            System.out.println(log);
+            print.println(log); print.flush();
+        }
+    }
+
 
     /*
         TCP Connection Log  
@@ -461,12 +470,10 @@ public class Logger{
     }
 
     public void logSendRawMsg(int to, byte [] buf) {
-        if (false && debug) {
+        if (debug) {
             String time = timeFinder();
             String log = time + ": Peer " + peerProcess.id + " is sending raw message to " + to + ": ";
-            for(byte b:buf) {
-                log += String.format("%02X ", b);
-            }
+            log += MessageStream.buf2hex(buf);
             System.out.println(log);
             print.println(log); print.flush();
         }

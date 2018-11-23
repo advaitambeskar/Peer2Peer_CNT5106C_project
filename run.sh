@@ -2,15 +2,13 @@
 
 set -e
 javac *.java
-java -cp . peerProcess 1001 &
+java -cp . peerProcess 1 &
 sleep 1
-java -cp . peerProcess 1002 &
+java -cp . peerProcess 2 &
 sleep 1
-java -cp . peerProcess 1003 &
+java -cp . peerProcess 3 &
 sleep 1
-java -cp . peerProcess 1004 &
+java -cp . peerProcess 4 &
 sleep 1
-java -cp . peerProcess 1005 &
-sleep 1
-java -cp . peerProcess 1006 &
+java -cp . peerProcess 5 &
 wait

@@ -44,8 +44,17 @@ public class MessageStream {
         case 7:
             return "piece";
         }
-        throw new Exception("is this possible?");
+        throw new Exception("is this possible? type = " + type);
     }
+
+    public static String buf2hex(byte []buf) {
+        String log = "";
+        for(byte b:buf) {
+            log += String.format("%02X ", b);
+        }
+        return log;
+    }
+
     Message next() throws Exception {
         // Get the next document blockingly.
         // Messages have format [length][type][payload], here in this function,
@@ -59,15 +68,21 @@ public class MessageStream {
             connection = null;
             return new Message("terminate", null);  // special message to terminate thread.
         }
-        int length = ByteBuffer.wrap(lengthbuf).getInt();
-        // peerProcess.logger.logDebug("recv msg length = " + length);
-        // read the rest of the message
-        byte [] buf = new byte[length];
-        input.read(buf);
+        int length = Message.pack(lengthbuf[0], lengthbuf[1], lengthbuf[2], lengthbuf[3]);
+        String length_in_bytes = "[" + buf2hex(lengthbuf) + "]";
         // read message type
-        String type = getMessageTypeString(buf[0]);
+        byte [] typebuf = new byte[1];
+        input.read(typebuf);
+        peerProcess.logger.logDebugPeer(peer.id, "recv msg length = " + length + length_in_bytes + ", type = " + typebuf[0]);
+        String type = getMessageTypeString(typebuf[0]);
+        // read the rest of the message
+        length--;
+        byte [] buf = new byte[length];
+        int pos = 0;
+        while(pos < length)
+            pos += input.read(buf, pos, length - pos);
         // create message
-        return new Message(type, Arrays.copyOfRange(buf, 1, buf.length));
+        return new Message(type, buf);
     }
 
     private void sendWithTypePayload(byte type, byte [] payload) throws Exception {
@@ -81,7 +96,7 @@ public class MessageStream {
         int length = 1 + payload.length;
         byte [] buf = new byte[payload.length + 5];
         byte [] lengthbuf = Message.int2byte(length);
-        // peerProcess.logger.logDebug("send msg length = " + length);
+        peerProcess.logger.logDebugPeer(peer.id, "send msg length = " + length + ", type = " + type);
         buf[0] = lengthbuf[0];
         buf[1] = lengthbuf[1];
         buf[2] = lengthbuf[2];
@@ -98,7 +113,6 @@ public class MessageStream {
     void send(Message msg) throws Exception {
         // Given `Message` object, convert it to bytes and send it using output stream
         // This is public, and designed to be used externally
-        byte type;
         switch (msg.type) {
         case "choke":
             sendWithTypePayload((byte)0, null);

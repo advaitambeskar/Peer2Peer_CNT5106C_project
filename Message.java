@@ -60,6 +60,7 @@ class Message {
 
     public static int pack(int c1, int c2, int c3, int c4)
     {
+        c1 &= 0xff; c2 &= 0xff; c3 &= 0xff; c4 &= 0xff;
         return ((c1 << 24) | (c2 << 16) | (c3 << 8) | (c4));
     }
 
@@ -112,7 +113,7 @@ class Message {
         case "have":
         case "request":
         case "piece":
-            return pack(payload[0] & 0xFF, payload[1] & 0xFF, payload[2] & 0xFF, payload[3] & 0xFF);
+            return pack(payload[0], payload[1], payload[2], payload[3]);
         }
         throw new Exception("Trying to get int payload from illegal message type, this must be a bug");
     }
