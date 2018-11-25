@@ -4,7 +4,7 @@ set -e
 
 rm PeerInfo.cfg
 ln -s PeerInfo-cise.cfg PeerInfo.cfg
-rm -rf *.class log
+rm -rf *.class *.log
 javac *.java
 
 ssh lin114-01.cise.ufl.edu 'cd CNT5106C-Computer-Networks-Project && java -cp . peerProcess 1 && exit' &

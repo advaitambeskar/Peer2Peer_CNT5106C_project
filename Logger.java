@@ -28,7 +28,7 @@ public class Logger{
 
     Logger() throws Exception {
         FileWriter file = null;
-        String path = "./log/log_peer_" + Integer.toString(peerProcess.id) + ".log";
+        String path = "./log_peer_" + Integer.toString(peerProcess.id) + ".log";
         boolean append_to_file = true;
         try {
             File f = new File("./log");
@@ -222,7 +222,7 @@ public class Logger{
         int sourceID = peerProcess.id;
         String time = timeFinder();
 
-        String log = time + ": Peer "+ sourceID + " is unchoked by Peer " + unchokedID + ".";
+        String log = time + ": Peer "+ sourceID + " is unchoked by " + unchokedID + ".";
         System.out.println(log);
 
         
@@ -254,7 +254,7 @@ public class Logger{
         int sourceID = peerProcess.id;
         String time = timeFinder();
 
-        String log = time + ": Peer "+ sourceID + " is choked by Peer " + chokedID;
+        String log = time + ": Peer "+ sourceID + " is choked by " + chokedID;
         System.out.println(log);
 
         
@@ -285,7 +285,7 @@ public class Logger{
          */
         int destinationID = peerProcess.id;
         String time = timeFinder();
-        String log = time + ": Peer " + destinationID + " received the 'have' message from Peer "+ sourceID + " for the piece " + pieceIndex + ".";
+        String log = time + ": Peer " + destinationID + " received the 'have' message from "+ sourceID + " for the piece " + pieceIndex + ".";
         System.out.println(log);
 
         
@@ -311,7 +311,7 @@ public class Logger{
         int destinationID = peerProcess.id;
         String time = timeFinder();
 
-        String log = time + ": Peer " + destinationID + " received the 'interested' message from Peer "+ sourceID + ".";
+        String log = time + ": Peer " + destinationID + " received the 'interested' message from "+ sourceID + ".";
         System.out.println(log);
 
         
@@ -338,7 +338,7 @@ public class Logger{
 
         String time = timeFinder();
 
-        String log = time + ": Peer " + destinationID + " received the 'not interested' message from Peer "+ sourceID + ".";
+        String log = time + ": Peer " + destinationID + " received the 'not interested' message from "+ sourceID + ".";
         System.out.println(log);
 
         
@@ -377,7 +377,7 @@ public class Logger{
         }
         peerProcess.bitfield_mutex.unlock();
 
-        String log = time + ": Peer " + destinationID + " has downloaded piece " + pieceIndex + " from Peer " + sourceID + ". Now the number of pieces it has is "+ collectedPiece;
+        String log = time + ": Peer " + destinationID + " has downloaded piece " + pieceIndex + " from " + sourceID + ". Now the number of pieces it has is " + collectedPiece + ".";
         System.out.println(log);
 
         

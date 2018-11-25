@@ -5,7 +5,7 @@ set -e
 rm PeerInfo.cfg
 ln -s PeerInfo-localhost.cfg PeerInfo.cfg
 
-rm -rf log *.class
+rm -rf *.log *.class
 javac *.java
 
 java -cp . peerProcess 1 &
