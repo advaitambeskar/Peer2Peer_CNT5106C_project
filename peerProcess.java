@@ -87,7 +87,7 @@ public class peerProcess {
                     }
                 }
             } else {
-                if(p.top_k.get()) {
+                if(p.top_k.get() && !p.optim_selected.get()) {
                     p.top_k.set(false);
                     if(p.msgstream != null) {  // in case handshake is not finished yet
                         p.msgstream.send(Message.createChoke());
@@ -118,7 +118,7 @@ public class peerProcess {
                     if(selectedPeer.msgstream != null) {  // in case handshake is not finished yet
                         selectedPeer.msgstream.send(Message.createUnchoke());
                     }
-                } else if(p != selectedPeer && p.optim_selected.get()) {
+                } else if(p != selectedPeer && p.optim_selected.get() && !p.top_k.get()) {
                     p.optim_selected.set(false);
                     p.msgstream.send(Message.createChoke());
                 }
