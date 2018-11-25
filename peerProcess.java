@@ -105,7 +105,6 @@ public class peerProcess {
                 valuesList.add(p);
             }
         }
-        System.out.println(valuesList.size());
         if(valuesList.size() > 0) {
             int selected = ThreadLocalRandom.current().nextInt(valuesList.size());
             Peer selectedPeer = valuesList.get(selected);
