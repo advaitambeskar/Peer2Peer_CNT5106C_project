@@ -55,7 +55,7 @@ public class Logger{
         if (debug) {
             String time = timeFinder();
             String log = time + ": [" + peerProcess.id + "] " + s;
-            System.out.println(log);
+            //System.out.println(log);
             print.println(log); print.flush();
         }
     }
@@ -64,7 +64,7 @@ public class Logger{
         if (debug) {
             String time = timeFinder();
             String log = time + ": [" + peerProcess.id + " with " + id + "] " + s;
-            System.out.println(log);
+            //System.out.println(log);
             print.println(log); print.flush();
         }
     }
@@ -93,7 +93,7 @@ public class Logger{
         */
         String time = timeFinder();
         String log = time + ": Peer " + Integer.toString(sourceID) + " makes connection to Peer " + Integer.toString(destinationID);
-        System.out.println(log);
+        //System.out.println(log);
         
         print.println(log); print.flush();
         return true;
@@ -118,7 +118,7 @@ public class Logger{
         */
         String time = timeFinder();
         String log = time + ": Peer " + Integer.toString(destinationID) + " is connected from Peer " + Integer.toString(sourceID);
-        System.out.println(log);
+        //System.out.println(log);
 
         print.println(log); print.flush();
         return true;
@@ -160,7 +160,7 @@ public class Logger{
 
         String log = time + ": Peer " +  Integer.toString(sourceID) + " has the preferred neighbors " + preferredListString;
 
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -192,7 +192,7 @@ public class Logger{
         String time = timeFinder();
 
         String log = time +": Peer " + Integer.toString(sourceID) + " has the optimistically unchoked neighbor " + Integer.toString(unchokedID.id);
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -223,7 +223,7 @@ public class Logger{
         String time = timeFinder();
 
         String log = time + ": Peer "+ sourceID + " is unchoked by " + unchokedID + ".";
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -255,7 +255,7 @@ public class Logger{
         String time = timeFinder();
 
         String log = time + ": Peer "+ sourceID + " is choked by " + chokedID;
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -286,7 +286,7 @@ public class Logger{
         int destinationID = peerProcess.id;
         String time = timeFinder();
         String log = time + ": Peer " + destinationID + " received the 'have' message from "+ sourceID + " for the piece " + pieceIndex + ".";
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -312,7 +312,7 @@ public class Logger{
         String time = timeFinder();
 
         String log = time + ": Peer " + destinationID + " received the 'interested' message from "+ sourceID + ".";
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -339,7 +339,7 @@ public class Logger{
         String time = timeFinder();
 
         String log = time + ": Peer " + destinationID + " received the 'not interested' message from "+ sourceID + ".";
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -378,7 +378,7 @@ public class Logger{
         peerProcess.bitfield_mutex.unlock();
 
         String log = time + ": Peer " + destinationID + " has downloaded piece " + pieceIndex + " from " + sourceID + ". Now the number of pieces it has is " + collectedPiece + ".";
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -411,7 +411,7 @@ public class Logger{
         
         String log = time + ": Peer " + sourceID + " has downloaded the complete file.";
 
-        System.out.println(log);
+        //System.out.println(log);
 
         
         print.println(log); print.flush();
@@ -422,7 +422,7 @@ public class Logger{
         if (debug) {
             String time = timeFinder();
             String log = time + ": Peer " + peerProcess.id + " is requested piece " + pieceid + " by " + from + ".";
-            System.out.println(log);
+           // System.out.println(log);
             print.println(log); print.flush();
         }
     }
@@ -434,7 +434,7 @@ public class Logger{
             for(boolean b : bitfield) {
                 log += b?'1':'0';
             }
-            System.out.println(log);
+            //System.out.println(log);
             print.println(log); print.flush();
         }
     }
@@ -446,7 +446,7 @@ public class Logger{
             for(boolean b : bitfield) {
                 log += b?'1':'0';
             }
-            System.out.println(log);
+           // System.out.println(log);
             print.println(log); print.flush();
         }
     }
@@ -455,7 +455,7 @@ public class Logger{
         if (debug) {
             String time = timeFinder();
             String log = time + ": Peer " + peerProcess.id + " is sending piece " + pieceid + " to " + to + ".";
-            System.out.println(log);
+            //System.out.println(log);
             print.println(log); print.flush();
         }
     }
@@ -464,7 +464,7 @@ public class Logger{
         if (debug) {
             String time = timeFinder();
             String log = time + ": Peer " + peerProcess.id + " is sending request of " + pieceid + " to " + to + ".";
-            System.out.println(log);
+           // System.out.println(log);
             print.println(log); print.flush();
         }
     }
@@ -474,7 +474,7 @@ public class Logger{
             String time = timeFinder();
             String log = time + ": Peer " + peerProcess.id + " is sending raw message to " + to + ": ";
             log += MessageStream.buf2hex(buf);
-            System.out.println(log);
+            //System.out.println(log);
             print.println(log); print.flush();
         }
     }
